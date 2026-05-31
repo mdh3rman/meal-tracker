@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useGoals } from '../hooks/useGoals'
 
 export function Goals() {
   const { goals, save } = useGoals()
+  const hydrated = useRef(false)
   const [calories, setCalories] = useState('')
   const [carbs, setCarbs] = useState('')
   const [protein, setProtein] = useState('')
@@ -10,7 +11,8 @@ export function Goals() {
   const [saved, setSaved] = useState(false)
 
   useEffect(() => {
-    if (goals) {
+    if (goals && !hydrated.current) {
+      hydrated.current = true
       setCalories(String(goals.calories))
       setCarbs(goals.carbs != null ? String(goals.carbs) : '')
       setProtein(goals.protein != null ? String(goals.protein) : '')

@@ -16,9 +16,15 @@ export default function App() {
 
   return (
     <div className="max-w-md mx-auto relative">
-      {page === 'day' && <DayView initialDate={selectedDate ?? undefined} />}
-      {page === 'history' && <History onDaySelect={goToDay} />}
-      {page === 'goals' && <Goals />}
+      <div className={page === 'day' ? '' : 'hidden'}>
+        <DayView initialDate={selectedDate ?? undefined} />
+      </div>
+      <div className={page === 'history' ? '' : 'hidden'}>
+        <History onDaySelect={goToDay} />
+      </div>
+      <div className={page === 'goals' ? '' : 'hidden'}>
+        <Goals />
+      </div>
       <BottomNav current={page} onChange={setPage} />
     </div>
   )

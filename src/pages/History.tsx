@@ -17,9 +17,11 @@ export function History({ onDaySelect }: Props) {
   const days = eachDayOfInterval({ start: weekStart, end: endOfWeek(weekStart, { weekStartsOn: 1 }) })
 
   useEffect(() => {
+    let cancelled = false
     const start = format(weekStart, 'yyyy-MM-dd')
     const end = format(endOfWeek(weekStart, { weekStartsOn: 1 }), 'yyyy-MM-dd')
     getEntriesForDateRange(start, end).then(entries => {
+      if (cancelled) return
       const grouped: Record<string, FoodEntry[]> = {}
       for (const entry of entries) {
         if (!grouped[entry.date]) grouped[entry.date] = []
@@ -27,16 +29,17 @@ export function History({ onDaySelect }: Props) {
       }
       setEntriesByDate(grouped)
     })
+    return () => { cancelled = true }
   }, [weekStart])
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
       <div className="bg-indigo-600 text-white flex items-center justify-between px-4 py-3">
-        <button onClick={() => setWeekStart(w => subWeeks(w, 1))} className="text-2xl leading-none px-1">‹</button>
+        <button aria-label="Previous week" onClick={() => setWeekStart(w => subWeeks(w, 1))} className="text-2xl leading-none px-1">‹</button>
         <span className="font-bold text-sm">
           {format(weekStart, 'MMM d')} – {format(endOfWeek(weekStart, { weekStartsOn: 1 }), 'MMM d, yyyy')}
         </span>
-        <button onClick={() => setWeekStart(w => addWeeks(w, 1))} className="text-2xl leading-none px-1">›</button>
+        <button aria-label="Next week" onClick={() => setWeekStart(w => addWeeks(w, 1))} className="text-2xl leading-none px-1">›</button>
       </div>
 
       <div className="flex-1 overflow-y-auto pb-24">
