@@ -22,7 +22,7 @@ export function DateNav({ date, onBack, onForward, onDateChange }: Props) {
           type="date"
           value={date}
           onChange={e => e.target.value && onDateChange(e.target.value)}
-          className="absolute opacity-0 w-0 h-0"
+          className="sr-only"
           aria-label="Pick a date"
         />
       </label>

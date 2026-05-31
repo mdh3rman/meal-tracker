@@ -1,11 +1,10 @@
 import { FoodItem } from './FoodItem'
-import type { FoodEntry, MealName, Goals } from '../types'
+import type { FoodEntry, MealName } from '../types'
 import { MEAL_LABELS } from '../types'
 
 interface Props {
   meal: MealName
   entries: FoodEntry[]
-  goals: Goals | null
   onAddFood: (meal: MealName) => void
   onEdit: (entry: FoodEntry) => void
   onDelete: (id: string) => void

@@ -65,16 +65,23 @@ export function AddFoodSheet({ meal, editEntry, onConfirm, onClose }: Props) {
   useEffect(() => {
     if (onlineTimer.current) clearTimeout(onlineTimer.current)
     setOnline([])
+    setLoadingOnline(false)
     if (query.trim().length < 2) return
 
+    let cancelled = false
     onlineTimer.current = setTimeout(async () => {
       setLoadingOnline(true)
       const results = await searchOnline(query.trim())
-      setOnline(results)
-      setLoadingOnline(false)
+      if (!cancelled) {
+        setOnline(results)
+        setLoadingOnline(false)
+      }
     }, 600)
 
-    return () => { if (onlineTimer.current) clearTimeout(onlineTimer.current) }
+    return () => {
+      cancelled = true
+      if (onlineTimer.current) clearTimeout(onlineTimer.current)
+    }
   }, [query])
 
   const filteredBundled = query.trim().length >= 1
@@ -147,9 +154,9 @@ export function AddFoodSheet({ meal, editEntry, onConfirm, onClose }: Props) {
 
             {/* Results */}
             <div className="overflow-y-auto flex-1">
-              {suggestions.map((s, i) => (
+              {suggestions.map((s) => (
                 <button
-                  key={i}
+                  key={s.name}
                   onClick={() => pickSuggestion(s)}
                   className="w-full flex justify-between items-center px-4 py-2.5 border-b border-gray-50 text-left active:bg-indigo-50"
                 >
