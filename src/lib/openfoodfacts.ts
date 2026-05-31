@@ -22,7 +22,7 @@ export async function searchOnline(query: string): Promise<FoodSuggestion[]> {
     const data: OFFResponse = await res.json()
     return data.products
       .filter(p => p.product_name && p.product_name.trim().length > 0)
-      .map(p => {
+      .map((p): FoodSuggestion | null => {
         const n = p.nutriments ?? {}
         const kcal = n['energy-kcal_100g']
         if (!kcal) return null
@@ -32,7 +32,7 @@ export async function searchOnline(query: string): Promise<FoodSuggestion[]> {
           carbs: n.carbohydrates_100g != null ? Math.round(n.carbohydrates_100g * 10) / 10 : undefined,
           protein: n.proteins_100g != null ? Math.round(n.proteins_100g * 10) / 10 : undefined,
           fat: n.fat_100g != null ? Math.round(n.fat_100g * 10) / 10 : undefined,
-        } satisfies FoodSuggestion
+        }
       })
       .filter((s): s is FoodSuggestion => s !== null)
   } catch {
